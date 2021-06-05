@@ -1,0 +1,34 @@
+ingress:
+  enabled: true
+  issuerName: letsencrypt-prod
+  issuerType: cluster-issuer
+
+global:
+    secrets:
+        app:
+          name: app-secret
+          volumeName: app-secret-volume
+          mountPath: /app-data/secret
+    configmap:
+        app:
+          name: app-configmap
+          volumeName: app-configmap-volume
+          mountPath: /app-data/configmap
+    registrySecret:
+          name: registry-secret
+    metrics:
+        path: /metrics
+        port: "1234"
+        enabled: "true"
+
+client:
+      replicas: 1
+      image: 
+      imagePullPolicy: Always
+
+server:
+      replicas: 1
+      image: 
+      imagePullPolicy: Always
+
+
