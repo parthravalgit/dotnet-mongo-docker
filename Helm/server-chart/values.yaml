@@ -1,0 +1,2 @@
+replicas: 1
+image: parthravalcap/docker-dotnet-mongo-master_todo-server:v1

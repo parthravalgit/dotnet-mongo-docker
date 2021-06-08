@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-chart-svc
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: client-chart
+  template:
+    metadata:
+      labels:
+        app: client-chart
+    spec:
+      containers:
+      - name: client-chart-svc
+        image: {{ .Values.image }}
+        ports:
+        - containerPort: 8080
