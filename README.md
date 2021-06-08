@@ -1,6 +1,6 @@
-### Deploying an ASP.NET Core + MongoDB app to local Docker and remote Azure Container Service (w/ Kubernetes)
+### Deploying an ASP.NET Core + MongoDB app to local Docker, push to Docker Hub and Helm application install
 
-------------
+-----------------------------------------------
 
 Prerequisites:
 
@@ -16,65 +16,32 @@ Prerequisites:
 
     https://www.microsoft.com/net/download/core
 
-- Create a Kubernetes cluster in Azure
 
-    https://docs.microsoft.com/en-us/azure/container-service/container-service-kubernetes-walkthrough
+## Getting Started  
 
-- Create a VHD disk in Azure for Mongo persistence
+The following steps assumes that you have MongoDB installed locaclly in your machine. 
 
-    https://github.com/colemickens/azure-kubernetes-demo
+Once MongoDB is installed and running, 
 
---------------------------------
 
-UPDATE: Here's a screencast of these demo steps in action... https://channel9.msdn.com/Blogs/MVP-Azure/Containers-Two-Ways
+### Deploy the app as a container  
 
---------------------------------
++ Make sure you have [installed Docker](https://docs.docker.com/engine/installation/) and installed [Docker-Compose](https://docs.docker.com/engine/installation/)  
++ Make sure you are in `main` directory(`dotnet-mongo-docker`) 
++ Run `docker-compose up --build`  
 
-1. build web api app from command line
-
-    - dotnet restore
-    - dotnet build
-    - dotnet publish -o published
-
-1. build docker image locally
-
-    - docker build -t {YOUR-DOCKER-ID}/the-app .
-
-1. run docker image + mongodb locally
-
-    - docker run -d -p 27017:27017 --name mongodb bitnami/mongodb:latest
-    - docker run -d -p 80:80 --name webapi --link mongodb {YOUR-DOCKER-ID}/the-app
 
 1. push app container to Docker Hub
 
     - docker login
-    - docker push {YOUR-DOCKER-ID}/the-app
+    - docker push {YOUR-DOCKER-ID}/{YOUR-DOCKER-IMAGENAME}:{TAG}
 
-1. use Azure CLI to connect to ACS cluster
+2. install helm
 
-    - az login
-    - az account set --subscription "{YOUR-AZURE-SUBSCRIPTION-ID}"
-    - az acs kubernetes get-credentials --resource-group="{YOUR-ACS-RG-NAME}" --name="{YOUR-KUBE-ACS-NAME}"
-
-1. push mongo service
-
-    - kubectl apply -f mongo.service.yaml
-
-1. push mongo deployment
-
-    - update mongo.deployment.yaml
-    - kubectl apply -f mongo.deployment.yaml
-
-1. push app service
-
-    - kubectl apply -f app.service.yaml
-
-1. push app deployment
-
-    - update app.deployment.yaml
-    - kubectl apply -f app.deployment.yaml
+    - helm install server-app server-chart -n {YOUR-NAMESPACE}
+    - helm install client-app client-chart -n {YOUR-NAMESPACE}
 
 1. admin UI
 
     - kubectl proxy
-    - localhost:8001/ui
+    - localhost:5000/api/Todos
