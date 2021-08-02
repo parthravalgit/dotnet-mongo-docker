@@ -19,8 +19,15 @@ spec:
         ports:
         - containerPort: 5000
         volumeMounts:
-          - name: server-storage
-          mountPath: /data/mongo
+        - name: app-secret-volume
+          mountPath: /app-data/secret
+        - name: app-configmap-volume
+          mountPath: /app-data/configmap
       volumes:
-      - name: server-storage
-        emptyDir: {}
+      - name: app-secret-volume
+        secret:
+          secretName: {{ .Values.global.secrets.app.name }}
+      - name: app-configmap-volume
+        configMap:
+          name: {{ .Values.global.configmap.app.name }}
+
